@@ -6,8 +6,29 @@ export const storageService = {
   remove,
 }
 
-function query(entityType, delay = 500) {
-  var entities = JSON.parse(localStorage.getItem(entityType)) || []
+function query(entityType, delay = 500, filterBy = {}) {
+  let entities = JSON.parse(localStorage.getItem(entityType)) || []
+
+  if (filterBy.txt) {
+    const regExp = new RegExp(filterBy.txt, 'i')
+    entities = entities.filter((todo) => regExp.test(todo.txt))
+  }
+
+  if (filterBy.status) {
+    switch (filterBy.status) {
+      case 'active':
+        entities = entities.filter((todo) => !todo.doneAt)
+        break
+
+      case 'done':
+        entities = entities.filter((todo) => todo.doneAt)
+        break
+
+      default:
+        break
+    }
+  }
+
   return new Promise((resolve) => setTimeout(() => resolve(entities), delay))
 }
 

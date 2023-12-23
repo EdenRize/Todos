@@ -10,11 +10,12 @@ export const todoService = {
   save,
   remove,
   getEmptyTodo,
+  getDefaultFilter,
 }
 
-function query() {
+function query(filterBy) {
   // return axios.get(BASE_URL).then(res => res.data)
-  return storageService.query(STORAGE_KEY)
+  return storageService.query(STORAGE_KEY, 500, filterBy)
 }
 function getById(todoId) {
   return storageService.get(STORAGE_KEY, todoId)
@@ -36,6 +37,10 @@ function getEmptyTodo() {
     txt: '',
     doneAt: null,
   }
+}
+
+function getDefaultFilter() {
+  return { txt: '', status: 'all', pageIdx: 0, sort: 'txt' }
 }
 
 // TEST DATA

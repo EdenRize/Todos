@@ -1,4 +1,4 @@
-const { useState, useEffect } = React
+const { useState, useEffect, useRef } = React
 const { useSelector, useDispatch } = ReactRedux
 const { Link } = ReactRouterDOM
 
@@ -14,16 +14,24 @@ import {
 } from '../store/store.js'
 import { TodoList } from '../cmps/TodoList.jsx'
 import { userService } from '../services/user.service.js'
+import { utilService } from '../services/util.service.js'
+import { TodoFilter } from '../cmps/TodoFilter.jsx'
 
 export function TodoIndex() {
   const dispatch = useDispatch()
   const todos = useSelector((storeState) => storeState.todos)
+  const debounceOnSetFilter = useRef(utilService.debounce(onSetFilter, 500))
+  const [filterBy, setFilterBy] = useState(todoService.getDefaultFilter())
 
   useEffect(() => {
-    todoService.query().then((todos) => {
+    loadTodos()
+  }, [filterBy])
+
+  function loadTodos() {
+    todoService.query(filterBy).then((todos) => {
       dispatch({ type: SET_TODOS, todos })
     })
-  }, [])
+  }
 
   function onRemoveTodo(todoId) {
     todoService
@@ -63,12 +71,31 @@ export function TodoIndex() {
           activity,
         })
       )
+
+      loadTodos()
     })
   }
 
+  function onSetFilter(filterBy) {
+    setFilterBy((prevFilter) => ({
+      ...prevFilter,
+      ...filterBy,
+      pageIdx: isUndefined(prevFilter.pageIdx) ? undefined : 0,
+    }))
+  }
+
+  function isUndefined(value) {
+    return value === undefined
+  }
+
+  const { txt, status } = filterBy
   return (
     <section className="todo-index">
       <h3>Todo App</h3>
+      <TodoFilter
+        filterBy={{ txt, status }}
+        onSetFilter={debounceOnSetFilter.current}
+      />
       <Link to="/todo/edit">Add Todo</Link>
       <main>
         <TodoList

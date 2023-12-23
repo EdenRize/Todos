@@ -1,6 +1,7 @@
 const { useSelector, useDispatch } = ReactRedux
 const { useParams, useNavigate } = ReactRouterDOM
-const { useState, useEffect } = React
+const { useState, useEffect, Fragment } = React
+import { ActivityList } from '../cmps/ActivityList.jsx'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { userService } from '../services/user.service.js'
 import { SET_USER } from '../store/store.js'
@@ -77,39 +78,43 @@ export function UserProfile() {
       <h2>Profile</h2>
 
       {userToEdit && (
-        <form onSubmit={onChangeUser}>
-          <label>
-            <p>Full Name:</p>
-            <input
-              type="text"
-              placeholder="Full Name"
-              name="fullname"
-              value={userToEdit.fullname}
-              onChange={handleChange}
-            />
-          </label>
+        <Fragment>
+          <form onSubmit={onChangeUser}>
+            <label>
+              <p>Full Name:</p>
+              <input
+                type="text"
+                placeholder="Full Name"
+                name="fullname"
+                value={userToEdit.fullname}
+                onChange={handleChange}
+              />
+            </label>
 
-          <label>
-            <p>Color:</p>
-            <input
-              type="color"
-              name="color"
-              value={userToEdit.prefs.color}
-              onChange={onChangePrefs}
-            />
-          </label>
+            <label>
+              <p>Color:</p>
+              <input
+                type="color"
+                name="color"
+                value={userToEdit.prefs.color}
+                onChange={onChangePrefs}
+              />
+            </label>
 
-          <label>
-            <p>BgColor:</p>
-            <input
-              type="color"
-              name="bgColor"
-              value={userToEdit.prefs.bgColor}
-              onChange={onChangePrefs}
-            />
-          </label>
-          <button>Save</button>
-        </form>
+            <label>
+              <p>BgColor:</p>
+              <input
+                type="color"
+                name="bgColor"
+                value={userToEdit.prefs.bgColor}
+                onChange={onChangePrefs}
+              />
+            </label>
+            <button>Save</button>
+          </form>
+
+          <ActivityList activities={userToEdit.activities} />
+        </Fragment>
       )}
     </section>
   )

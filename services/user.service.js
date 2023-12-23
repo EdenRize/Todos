@@ -70,7 +70,8 @@ function updateActivities(activity) {
   return userService
     .getById(loggedInUserId)
     .then((user) => {
-      const activities = [...user.activities, activity]
+      const activities = [...user.activities]
+      activities.unshift(activity)
       const newUser = { ...user, activities }
       return storageService.put(STORAGE_KEY, newUser)
     })

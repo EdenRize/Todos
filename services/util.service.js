@@ -6,6 +6,7 @@ export const utilService = {
   saveToStorage,
   animateCSS,
   debounce,
+  getFormattedTime,
 }
 
 function makeId(length = 6) {
@@ -107,4 +108,27 @@ function debounce(fn, wait) {
       fn.apply(context, args) // call the function if time expires
     }, wait)
   }
+}
+
+function getFormattedTime(timestamp) {
+  const now = Date.now()
+  const seconds = Math.floor((now - timestamp) / 1000)
+
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+  }
+
+  for (const [unit, interval] of Object.entries(intervals)) {
+    const count = Math.floor(seconds / interval)
+    if (count >= 1) {
+      return `${count} ${unit}${count === 1 ? '' : 's'} ago`
+    }
+  }
+
+  return 'Just now'
 }

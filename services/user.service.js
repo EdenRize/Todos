@@ -47,7 +47,6 @@ function updateBalance(diff) {
 }
 
 function updateActivities(activity) {
-  console.log('activity', activity)
   const loggedInUserId = getLoggedinUser()._id
   return userService
     .getById(loggedInUserId)

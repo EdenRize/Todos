@@ -46,12 +46,36 @@ export function TodoIndex() {
       })
   }
 
+  function onTodoChange(todo) {
+    const isCheck = todo.doneAt ? null : Date.now()
+    const newTodo = { ...todo, doneAt: isCheck }
+
+    dispatch({ type: UPDATE_TODO, todo: newTodo })
+
+    todoService.save(newTodo).then(() => {
+      const activity = {
+        txt: isCheck ? 'Cheked a todo' : 'Uncheked a todo',
+        at: Date.now(),
+      }
+      userService.updateActivities(activity).then(
+        dispatch({
+          type: ADD_USER_ACTIVITY,
+          activity,
+        })
+      )
+    })
+  }
+
   return (
     <section className="todo-index">
       <h3>Todo App</h3>
       <Link to="/todo/edit">Add Todo</Link>
       <main>
-        <TodoList todos={todos} onDeleteTodo={onRemoveTodo} />
+        <TodoList
+          todos={todos}
+          onDeleteTodo={onRemoveTodo}
+          onTodoChange={onTodoChange}
+        />
       </main>
     </section>
   )

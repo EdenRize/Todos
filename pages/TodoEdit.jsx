@@ -17,6 +17,15 @@ export function TodoEdit() {
   const { todoId } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const user = useSelector((storeState) => storeState.loggedinUser)
+  let styles
+
+  if (user) {
+    styles = {
+      color: user.prefs.color,
+      backgroundColor: user.prefs.bgColor,
+    }
+  }
 
   useEffect(() => {
     if (todoId) loadTodo()
@@ -71,7 +80,7 @@ export function TodoEdit() {
   }
 
   return (
-    <section className="todo-edit">
+    <section style={styles} className="todo-edit">
       <h2>{todoToEdit._id ? 'Edit' : 'Add'} Todo</h2>
 
       <form onSubmit={onSaveTodo}>

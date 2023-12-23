@@ -12,6 +12,7 @@ export const userService = {
   updateBalance,
   getEmptyCredentials,
   updateActivities,
+  updateUser,
 }
 
 function getById(userId) {
@@ -20,6 +21,7 @@ function getById(userId) {
 
 function login({ username, password }) {
   return storageService.query(STORAGE_KEY).then((users) => {
+    console.log('users', users)
     const user = users.find((user) => user.username === username)
     if (user) return _setLoggedinUser(user)
     else return Promise.reject('Invalid login')
@@ -27,8 +29,25 @@ function login({ username, password }) {
 }
 
 function signup({ username, password, fullname }) {
-  const user = { username, password, fullname, balance: 10000, activities: [] }
+  const user = {
+    username,
+    password,
+    fullname,
+    balance: 10000,
+    activities: [],
+    prefs: { color: 'black', bgColor: 'white' },
+  }
   return storageService.post(STORAGE_KEY, user).then(_setLoggedinUser)
+}
+
+function updateUser(newUser) {
+  return storageService.query(STORAGE_KEY).then((users) => {
+    let user = users.find((user) => user._id === newUser._id)
+    console.log('user before', user)
+    user = { ...user, ...newUser }
+    console.log('user after', user)
+    return storageService.put(STORAGE_KEY, user).then(_setLoggedinUser(user))
+  })
 }
 
 function updateBalance(diff) {
@@ -76,6 +95,7 @@ function _setLoggedinUser(user) {
     fullname: user.fullname,
     balance: user.balance,
     activities: user.activities,
+    prefs: user.prefs,
   }
   sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
   return userToSave
@@ -88,7 +108,3 @@ function getEmptyCredentials() {
     fullname: '',
   }
 }
-
-// Test Data
-// userService.signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})
-// userService.login({username: 'muki', password: 'muki1'})

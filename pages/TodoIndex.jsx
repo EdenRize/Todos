@@ -19,9 +19,18 @@ import { TodoFilter } from '../cmps/TodoFilter.jsx'
 
 export function TodoIndex() {
   const dispatch = useDispatch()
+  const user = useSelector((storeState) => storeState.loggedinUser)
   const todos = useSelector((storeState) => storeState.todos)
   const debounceOnSetFilter = useRef(utilService.debounce(onSetFilter, 500))
   const [filterBy, setFilterBy] = useState(todoService.getDefaultFilter())
+  let styles
+
+  if (user) {
+    styles = {
+      color: user.prefs.color,
+      backgroundColor: user.prefs.bgColor,
+    }
+  }
 
   useEffect(() => {
     loadTodos()
@@ -87,7 +96,7 @@ export function TodoIndex() {
 
   const { txt, status } = filterBy
   return (
-    <section className="todo-index">
+    <section style={styles} className="todo-index">
       <h3>Todo App</h3>
       <TodoFilter
         filterBy={{ txt, status }}

@@ -50,6 +50,9 @@ function appReducer(state = initialState, action = {}) {
       const activities = [...state.loggedinUser.activities, action.activity]
       user = { ...state.loggedinUser, activities }
       return { ...state, loggedinUser: user }
+    // case UPDATE_USER_FULLNAME:
+    //   user = { ...state.loggedinUser, fullname: action. }
+    //   return { ...state, loggedinUser: user }
 
     default:
       return state

@@ -3,6 +3,7 @@ import { LoginSignup } from './LoginSignup.jsx'
 import { userService } from '../services/user.service.js'
 import { showErrorMsg } from '../services/event-bus.service.js'
 import { SET_CART_IS_SHOWN, SET_USER } from '../store/store.js'
+import { ProgressBar } from './ProgressBar.jsx'
 
 const { useState } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -13,16 +14,13 @@ export function AppHeader() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  // TODO: move to storeState
-  // const [user, setUser] = useState(userService.getLoggedinUser())
   const user = useSelector((storeState) => storeState.loggedinUser)
-  const isCartShown = useSelector((storeState) => storeState.isCartShown)
+  const todos = useSelector((storeState) => storeState.todos)
 
   function onLogout() {
     userService
       .logout()
       .then(() => {
-        // DONE: use dispatch
         onSetUser(null)
       })
       .catch((err) => {
@@ -31,15 +29,8 @@ export function AppHeader() {
   }
 
   function onSetUser(user) {
-    // DONE: use dispatch
-    // setUser(user)
     dispatch({ type: SET_USER, user })
     navigate('/')
-  }
-
-  function onToggleCart(ev) {
-    ev.preventDefault()
-    dispatch({ type: SET_CART_IS_SHOWN, isCartShown: !isCartShown })
   }
 
   return (
@@ -50,7 +41,6 @@ export function AppHeader() {
           <NavLink to="/">Home</NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/todo">Todos</NavLink>
-          {/* <a onClick={onToggleCart} href="#">🛒 Cart</a> */}
         </nav>
       </section>
       {user ? (
@@ -65,6 +55,7 @@ export function AppHeader() {
           <LoginSignup onSetUser={onSetUser} />
         </section>
       )}
+      <ProgressBar todos={todos} />
       <UserMsg />
     </header>
   )

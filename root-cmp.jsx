@@ -9,6 +9,7 @@ import { AboutUs } from './pages/AboutUs.jsx'
 import { TodoIndex } from './pages/TodoIndex.jsx'
 import { store } from './store/store.js'
 import { TodoEdit } from './pages/TodoEdit.jsx'
+import { UserProfile } from './pages/UserProfile.jsx'
 
 export class App extends React.Component {
   render() {
@@ -22,6 +23,7 @@ export class App extends React.Component {
                 <Route element={<HomePage />} path="/" />
                 <Route element={<AboutUs />} path="/about" />
                 <Route element={<TodoIndex />} path="/todo" />
+                <Route element={<UserProfile />} path="/profile" />
                 <Route path="/todo/edit/:todoId" element={<TodoEdit />} />
                 <Route path="/todo/edit" element={<TodoEdit />} />
               </Routes>

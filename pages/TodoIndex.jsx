@@ -58,9 +58,8 @@ export function TodoIndex() {
     const isCheck = todo.doneAt ? null : Date.now()
     const newTodo = { ...todo, doneAt: isCheck }
 
-    dispatch({ type: UPDATE_TODO, todo: newTodo })
-
     todoService.save(newTodo).then(() => {
+      dispatch({ type: UPDATE_TODO, todo: newTodo })
       const activity = {
         txt: isCheck ? 'Cheked a todo' : 'Uncheked a todo',
         at: Date.now(),
@@ -71,8 +70,6 @@ export function TodoIndex() {
           activity,
         })
       )
-
-      loadTodos()
     })
   }
 

@@ -4,23 +4,18 @@ const { Link } = ReactRouterDOM
 
 import { todoService } from '../services/todo.service.js'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
-import {
-  ADD_TODO,
-  ADD_TODO_TO_TODOT,
-  REMOVE_TODO,
-  SET_TODOS,
-  UPDATE_TODO,
-  ADD_USER_ACTIVITY,
-} from '../store/store.js'
 import { TodoList } from '../cmps/TodoList.jsx'
 import { userService } from '../services/user.service.js'
 import { utilService } from '../services/util.service.js'
 import { TodoFilter } from '../cmps/TodoFilter.jsx'
+import { SET_TODOS, REMOVE_TODO, UPDATE_TODO} from '../store/reducers/todo.reducer.js'
+import { ADD_USER_ACTIVITY } from '../store/reducers/user.reducer.js'
+import { loadTodos, removeTodo, checkTodo } from '../store/actions/todo.actions.js'
 
 export function TodoIndex() {
   const dispatch = useDispatch()
-  const user = useSelector((storeState) => storeState.loggedinUser)
-  const todos = useSelector((storeState) => storeState.todos)
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
+  const todos = useSelector((storeState) => storeState.todoModule.todos)
   const debounceOnSetFilter = useRef(utilService.debounce(onSetFilter, 500))
   const [filterBy, setFilterBy] = useState(todoService.getDefaultFilter())
   let styles
@@ -33,53 +28,20 @@ export function TodoIndex() {
   }
 
   useEffect(() => {
-    loadTodos()
+    loadTodos(filterBy)
+      .then()
+      .catch(() => {
+        showErrorMsg('Cannot show todos')
+      })
   }, [filterBy])
 
-  function loadTodos() {
-    todoService.query(filterBy).then((todos) => {
-      dispatch({ type: SET_TODOS, todos })
-    })
-  }
-
   function onRemoveTodo(todoId) {
-    todoService
-      .remove(todoId)
-      .then(() => {
-        showSuccessMsg('Todo removed')
-        dispatch({ type: REMOVE_TODO, todoId })
-
-        const activity = { txt: 'Removed a todo', at: Date.now() }
-        userService.updateActivities(activity).then(
-          dispatch({
-            type: ADD_USER_ACTIVITY,
-            activity,
-          })
-        )
-      })
+    removeTodo(todoId)
+      .then(() => showSuccessMsg('Todo removed'))
       .catch((err) => {
         console.log('Cannot remove todo', err)
         showErrorMsg('Cannot remove todo')
       })
-  }
-
-  function onTodoChange(todo) {
-    const isCheck = todo.doneAt ? null : Date.now()
-    const newTodo = { ...todo, doneAt: isCheck }
-
-    todoService.save(newTodo).then(() => {
-      dispatch({ type: UPDATE_TODO, todo: newTodo })
-      const activity = {
-        txt: isCheck ? 'Cheked a todo' : 'Uncheked a todo',
-        at: Date.now(),
-      }
-      userService.updateActivities(activity).then(
-        dispatch({
-          type: ADD_USER_ACTIVITY,
-          activity,
-        })
-      )
-    })
   }
 
   function onSetFilter(filterBy) {
@@ -107,7 +69,7 @@ export function TodoIndex() {
         <TodoList
           todos={todos}
           onDeleteTodo={onRemoveTodo}
-          onTodoChange={onTodoChange}
+          onCheckTodo={checkTodo}
         />
       </main>
     </section>

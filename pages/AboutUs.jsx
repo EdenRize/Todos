@@ -1,7 +1,7 @@
 const { useSelector } = ReactRedux
 
 export function AboutUs() {
-  const user = useSelector((storeState) => storeState.loggedinUser)
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
   let styles
 
   if (user) {

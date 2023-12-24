@@ -2,8 +2,8 @@ import { UserMsg } from './UserMsg.jsx'
 import { LoginSignup } from './LoginSignup.jsx'
 import { userService } from '../services/user.service.js'
 import { showErrorMsg } from '../services/event-bus.service.js'
-import { SET_CART_IS_SHOWN, SET_USER } from '../store/store.js'
 import { ProgressBar } from './ProgressBar.jsx'
+import { SET_USER } from '../store/reducers/user.reducer.js'
 
 const { useState } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -14,8 +14,8 @@ export function AppHeader() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const user = useSelector((storeState) => storeState.loggedinUser)
-  const todos = useSelector((storeState) => storeState.todos)
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
+  const todos = useSelector((storeState) => storeState.todoModule.todos)
 
   function onLogout() {
     userService

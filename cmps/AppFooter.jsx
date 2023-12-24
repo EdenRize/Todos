@@ -2,19 +2,11 @@ const { useState, useEffect } = React
 const { useSelector, useDispatch } = ReactRedux
 
 import { UserMsg } from './UserMsg.jsx'
-// import { ShoppingCart } from './ShoppingCart.jsx'
-// import { SET_CART_IS_SHOWN } from '../store/store.js'
+
 
 export function AppFooter() {
   const dispatch = useDispatch()
-  // const [isCartShown, setIsCartShown] = useState(false)
-  // const isCartShown = useSelector(storeState => storeState.isCartShown)
-  // const count = useSelector(storeState => storeState.count)
-  // const carsCount = useSelector(storeState => storeState.cars.length)
 
-  // TODO: move to storeState
-  // const count = 101
-  // const carsCount = 0
   const cart = []
 
   return (

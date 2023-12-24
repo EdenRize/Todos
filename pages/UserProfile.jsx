@@ -4,10 +4,10 @@ const { useState, useEffect, Fragment } = React
 import { ActivityList } from '../cmps/ActivityList.jsx'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 import { userService } from '../services/user.service.js'
-import { SET_USER } from '../store/store.js'
+import { SET_USER } from '../store/reducers/user.reducer.js'
 
 export function UserProfile() {
-  const user = useSelector((storeState) => storeState.loggedinUser)
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
   const dispatch = useDispatch()
   const [userToEdit, setUserToEdit] = useState(user)
   const navigate = useNavigate()

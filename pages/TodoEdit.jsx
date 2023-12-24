@@ -1,23 +1,18 @@
 import { todoService } from '../services/todo.service.js'
 import { userService } from '../services/user.service.js'
+import { loadTodo } from '../store/actions/todo.actions.js'
+import { ADD_TODO, UPDATE_TODO } from '../store/reducers/todo.reducer.js'
+import { ADD_USER_ACTIVITY } from '../store/reducers/user.reducer.js'
 
 const { useEffect, useState } = React
 const { useParams, useNavigate } = ReactRouterDOM
 const { useSelector, useDispatch } = ReactRedux
-import {
-  ADD_TODO,
-  REMOVE_TODO,
-  SET_TODOS,
-  UPDATE_TODO,
-  ADD_USER_ACTIVITY,
-} from '../store/store.js'
-
 export function TodoEdit() {
   const [todoToEdit, setTodoToEdit] = useState(todoService.getEmptyTodo())
   const { todoId } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const user = useSelector((storeState) => storeState.loggedinUser)
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
   let styles
 
   if (user) {
@@ -28,12 +23,11 @@ export function TodoEdit() {
   }
 
   useEffect(() => {
-    if (todoId) loadTodo()
+    if (todoId) _loadTodo()
   }, [])
 
-  function loadTodo() {
-    todoService
-      .getById(todoId)
+  function _loadTodo() {
+    loadTodo(todoId)
       .then(setTodoToEdit)
       .catch((err) => {
         console.log('Had issued in todo edit:', err)

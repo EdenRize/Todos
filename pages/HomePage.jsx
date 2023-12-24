@@ -2,7 +2,7 @@ const { useState } = React
 const { useSelector, useDispatch } = ReactRedux
 
 export function HomePage() {
-  const user = useSelector((storeState) => storeState.loggedinUser)
+  const user = useSelector((storeState) => storeState.userModule.loggedinUser)
   let styles
 
   if (user) {

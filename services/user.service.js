@@ -34,7 +34,7 @@ function signup({ username, password, fullname }) {
     fullname,
     balance: 10000,
     activities: [],
-    prefs: { color: 'black', bgColor: 'white' },
+    prefs: { color: '#000', bgColor: '#fff' },
   }
   return storageService.post(STORAGE_KEY, user).then(_setLoggedinUser)
 }
@@ -42,9 +42,7 @@ function signup({ username, password, fullname }) {
 function updateUser(newUser) {
   return storageService.query(STORAGE_KEY).then((users) => {
     let user = users.find((user) => user._id === newUser._id)
-    console.log('user before', user)
     user = { ...user, ...newUser }
-    console.log('user after', user)
     return storageService.put(STORAGE_KEY, user).then(_setLoggedinUser(user))
   })
 }

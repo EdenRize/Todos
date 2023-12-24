@@ -31,7 +31,7 @@ function appReducer(state = initialState, action = {}) {
       return { ...state, todos }
 
     case ADD_TODO:
-      todos = [...state.todos, action.todo]
+      todos = [action.todo, ...state.todos]
       return { ...state, todos }
 
     case UPDATE_TODO:
@@ -43,16 +43,15 @@ function appReducer(state = initialState, action = {}) {
     // user
     case SET_USER:
       return { ...state, loggedinUser: action.user }
+
     case SET_USER_BALANCE:
       user = { ...state.loggedinUser, balance: action.balance }
       return { ...state, loggedinUser: user }
+
     case ADD_USER_ACTIVITY:
-      const activities = [...state.loggedinUser.activities, action.activity]
+      const activities = [action.activity, ...state.loggedinUser.activities]
       user = { ...state.loggedinUser, activities }
       return { ...state, loggedinUser: user }
-    // case UPDATE_USER_FULLNAME:
-    //   user = { ...state.loggedinUser, fullname: action. }
-    //   return { ...state, loggedinUser: user }
 
     default:
       return state

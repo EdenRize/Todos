@@ -1,6 +1,6 @@
 import { todoService } from '../services/todo.service.js'
 import { userService } from '../services/user.service.js'
-import { loadTodo } from '../store/actions/todo.actions.js'
+import { loadTodo, saveTodo } from '../store/actions/todo.actions.js'
 import { ADD_TODO, UPDATE_TODO } from '../store/reducers/todo.reducer.js'
 import { ADD_USER_ACTIVITY } from '../store/reducers/user.reducer.js'
 
@@ -44,29 +44,8 @@ export function TodoEdit() {
 
   function onSaveTodo(ev) {
     ev.preventDefault()
-    todoService
-      .save(todoToEdit)
-      .then((savedTodo) => {
-        let activityTitle
-
-        if (todoToEdit._id) {
-          dispatch({ type: UPDATE_TODO, todo: savedTodo })
-          activityTitle = 'Updated a todo'
-        } else {
-          dispatch({ type: ADD_TODO, todo: savedTodo })
-          activityTitle = 'Added a todo'
-        }
-
-        const activity = { txt: activityTitle, at: Date.now() }
-        userService.updateActivities(activity).then(
-          dispatch({
-            type: ADD_USER_ACTIVITY,
-            activity,
-          })
-        )
-
-        navigate('/todo')
-      })
+    saveTodo(todoToEdit)
+      .then(() => navigate('/todo'))
       .catch((err) => {
         console.log('Cannot add todo', err)
         showErrorMsg('Cannot add todo')

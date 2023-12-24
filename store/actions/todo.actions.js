@@ -93,6 +93,5 @@ export function saveTodo(todo) {
     .catch((err) => {
       console.log('err', err)
       throw err
-      // showErrorMsg('Cannot add todo')
     })
 }

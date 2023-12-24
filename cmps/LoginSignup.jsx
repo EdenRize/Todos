@@ -1,5 +1,6 @@
 import { showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
 import { userService } from '../services/user.service.js'
+import { login, signUp } from '../store/actions/user.actions.js'
 import { LoginForm } from './LoginForm.jsx'
 
 const { useState } = React
@@ -8,12 +9,11 @@ export function LoginSignup({ onSetUser }) {
   const [isSignup, setIsSignUp] = useState(false)
 
   function onLogin(credentials) {
-    isSignup ? signup(credentials) : login(credentials)
+    isSignup ? _signup(credentials) : _login(credentials)
   }
 
-  function login(credentials) {
-    userService
-      .login(credentials)
+  function _login(credentials) {
+    login(credentials)
       .then(onSetUser)
       .then(() => {
         showSuccessMsg('Logged in successfully')
@@ -23,12 +23,11 @@ export function LoginSignup({ onSetUser }) {
       })
   }
 
-  function signup(credentials) {
-    userService
-      .signup(credentials)
+  function _signup(credentials) {
+    signUp(credentials)
       .then(onSetUser)
       .then(() => {
-        showSuccessMsg('Signed in successfully')
+        showSuccessMsg('Signed up successfully')
       })
       .catch((err) => {
         showErrorMsg('Oops try again')

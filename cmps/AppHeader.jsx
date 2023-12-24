@@ -4,6 +4,7 @@ import { userService } from '../services/user.service.js'
 import { showErrorMsg } from '../services/event-bus.service.js'
 import { ProgressBar } from './ProgressBar.jsx'
 import { SET_USER } from '../store/reducers/user.reducer.js'
+import { logout } from '../store/actions/user.actions.js'
 
 const { useState } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -18,8 +19,7 @@ export function AppHeader() {
   const todos = useSelector((storeState) => storeState.todoModule.todos)
 
   function onLogout() {
-    userService
-      .logout()
+    logout()
       .then(() => {
         onSetUser(null)
       })
